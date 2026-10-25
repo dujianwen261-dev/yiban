@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}我的信息{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">我的信息</h4>
+  <a class="btn btn-primary" href="{{ url_for('students.edit_me') }}">修改联系方式</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-sm-3">学号</dt>
+      <dd class="col-sm-9">{{ student.student_no }}</dd>
+
+      <dt class="col-sm-3">姓名</dt>
+      <dd class="col-sm-9">{{ student.name }}</dd>
+
+      <dt class="col-sm-3">性别</dt>
+      <dd class="col-sm-9">{{ student.gender or '未填写' }}</dd>
+
+      <dt class="col-sm-3">班级</dt>
+      <dd class="col-sm-9">
+        {% if student.class_info %}
+          {{ student.class_info.department }} · {{ student.class_info.major }} · {{ student.class_info.class_name }}
+        {% else %}
+          <span class="text-muted">未分配</span>
+        {% endif %}
+      </dd>
+
+      <dt class="col-sm-3">入学日期</dt>
+      <dd class="col-sm-9">{{ student.enroll_date.isoformat() if student.enroll_date else '未填写' }}</dd>
+
+      <dt class="col-sm-3">手机号</dt>
+      <dd class="col-sm-9">{{ student.phone or '未填写' }}</dd>
+
+      <dt class="col-sm-3">邮箱</dt>
+      <dd class="col-sm-9">{{ student.email or '未填写' }}</dd>
+
+      <dt class="col-sm-3">家庭住址</dt>
+      <dd class="col-sm-9 mb-0">{{ student.address or '未填写' }}</dd>
+    </dl>
+  </div>
+</div>
+
+<p class="text-muted small mt-3">
+  学号、姓名、班级等核心信息由管理员维护，如有错误请联系辅导员。
+</p>
+{% endblock %}

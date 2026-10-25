@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}班级管理{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">班级管理</h4>
+  <a class="btn btn-primary" href="{{ url_for('classes.new_class') }}">+ 新增班级</a>
+</div>
+
+<div class="row g-3 mb-3">
+  <div class="col-sm-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body py-3">
+        <div class="text-muted small">学生总数</div>
+        <div class="fs-4 fw-bold">{{ total_students }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body py-3">
+        <div class="text-muted small">班级数</div>
+        <div class="fs-4 fw-bold">{{ rows|length }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body py-3">
+        <div class="text-muted small">未分配班级</div>
+        <div class="fs-4 fw-bold {% if unassigned %}text-danger{% endif %}">{{ unassigned }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-hover mb-0">
+      <thead class="table-light">
+        <tr>
+          <th>班级 ID</th>
+          <th>院系</th>
+          <th>专业</th>
+          <th>班级</th>
+          <th>学生人数</th>
+          <th class="text-end">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in rows %}
+        <tr>
+          <td>{{ r.class_id }}</td>
+          <td>{{ r.department }}</td>
+          <td>{{ r.major }}</td>
+          <td>{{ r.class_name }}</td>
+          <td>
+            {# 用原生 <progress> 做简易条形图，不引入图表库 #}
+            <div class="d-flex align-items-center gap-2">
+              <progress value="{{ r.student_count }}"
+                        max="{{ total_students if total_students > 0 else 1 }}"
+                        class="flex-grow-1" style="height:10px;"></progress>
+              <span class="small text-muted">{{ r.student_count }}</span>
+            </div>
+          </td>
+          <td class="text-end text-nowrap">
+            <a class="btn btn-sm btn-outline-primary"
+               href="{{ url_for('classes.edit_class', class_id=r.class_id) }}">修改</a>
+
+            <form class="d-inline" method="post"
+                  action="{{ url_for('classes.delete_class', class_id=r.class_id) }}"
+                  onsubmit="return confirm('确定删除班级 {{ r.class_name }} 吗？');">
+              <button class="btn btn-sm btn-outline-danger" type="submit"
+                      {% if r.student_count > 0 %}disabled title="该班级下还有学生"{% endif %}>
+                删除
+              </button>
+            </form>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="6" class="text-center text-muted py-4">还没有班级，请先新增</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

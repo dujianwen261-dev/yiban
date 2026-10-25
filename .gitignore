@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 密钥与本地配置（重要：绝不能提交）
+.env
+*.local
+
+# PyCharm
+.idea/
+
+# 数据库与临时文件
+*.sqlite3
+*.db
+*.log

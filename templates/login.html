@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}登录 - 学生信息管理系统{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5 col-lg-4">
+    <div class="card shadow-sm mt-5">
+      <div class="card-body p-4">
+        <h4 class="card-title text-center mb-4">登录</h4>
+
+        <form method="post" action="{{ url_for('auth.login', next=request.args.get('next')) }}">
+          <div class="mb-3">
+            <label class="form-label" for="username">账号 / 学号</label>
+            <input class="form-control" id="username" name="username"
+                   value="{{ request.form.get('username', '') }}"
+                   required autofocus autocomplete="username">
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label" for="password">密码</label>
+            <input class="form-control" id="password" name="password" type="password"
+                   required autocomplete="current-password">
+          </div>
+
+          <button class="btn btn-primary w-100" type="submit">登录</button>
+        </form>
+
+        <hr>
+        <p class="text-muted small mb-1">
+          管理员用账号密码登录；学生用<strong>学号</strong>登录，
+          初始密码为手机号后 6 位。
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

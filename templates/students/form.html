@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}{{ '修改学生' if student else '新增学生' }}{% endblock %}
+
+{% block content %}
+{% set v = form if form else {} %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">{{ '修改学生' if student else '新增学生' }}</h4>
+  <a class="btn btn-outline-secondary" href="{{ url_for('students.list_students') }}">返回列表</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post"
+          action="{{ url_for('students.edit_student', student_id=student.id) if student else url_for('students.new_student') }}">
+
+      <div class="row g-3">
+        <div class="col-md-6">
+          <label class="form-label" for="student_no">学号 <span class="text-danger">*</span></label>
+          <input class="form-control" id="student_no" name="student_no" required maxlength="20"
+                 value="{{ v.get('student_no', student.student_no if student else '') }}">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="name">姓名 <span class="text-danger">*</span></label>
+          <input class="form-control" id="name" name="name" required maxlength="20"
+                 value="{{ v.get('name', student.name if student else '') }}">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="gender">性别</label>
+          {% set g = v.get('gender', student.gender if student else '') %}
+          <select class="form-select" id="gender" name="gender">
+            <option value="" {% if not g %}selected{% endif %}>未填写</option>
+            <option value="男" {% if g == '男' %}selected{% endif %}>男</option>
+            <option value="女" {% if g == '女' %}selected{% endif %}>女</option>
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="class_id">班级</label>
+          {% set cid = v.get('class_id', student.class_id if student else '') %}
+          <select class="form-select" id="class_id" name="class_id">
+            <option value="">未分配</option>
+            {% for c in classes %}
+              <option value="{{ c.class_id }}"
+                {% if cid and cid|string == c.class_id|string %}selected{% endif %}>
+                {{ c.department }} · {{ c.class_name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="phone">手机号</label>
+          <input class="form-control" id="phone" name="phone" maxlength="11"
+                 placeholder="11 位手机号"
+                 value="{{ v.get('phone', student.phone or '' if student else '') }}">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="email">邮箱</label>
+          <input class="form-control" id="email" name="email" type="email" maxlength="50"
+                 value="{{ v.get('email', student.email or '' if student else '') }}">
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label" for="enroll_date">入学日期</label>
+          <input class="form-control" id="enroll_date" name="enroll_date" type="date"
+                 value="{{ v.get('enroll_date', student.enroll_date.isoformat() if student and student.enroll_date else '') }}">
+        </div>
+
+        <div class="col-12">
+          <label class="form-label" for="address">家庭住址</label>
+          <input class="form-control" id="address" name="address" maxlength="200"
+                 value="{{ v.get('address', student.address or '' if student else '') }}">
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button class="btn btn-primary" type="submit">保存</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('students.list_students') }}">取消</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

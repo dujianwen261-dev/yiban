@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}{{ '修改班级' if cls else '新增班级' }}{% endblock %}
+
+{% block content %}
+{% set v = form if form else {} %}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4 class="mb-0">{{ '修改班级' if cls else '新增班级' }}</h4>
+  <a class="btn btn-outline-secondary" href="{{ url_for('classes.list_classes') }}">返回列表</a>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post"
+          action="{{ url_for('classes.edit_class', class_id=cls.class_id) if cls else url_for('classes.new_class') }}">
+      <div class="row g-3">
+        <div class="col-md-4">
+          <label class="form-label" for="department">院系 <span class="text-danger">*</span></label>
+          <input class="form-control" id="department" name="department" required maxlength="50"
+                 value="{{ v.get('department', cls.department if cls else '') }}">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="major">专业 <span class="text-danger">*</span></label>
+          <input class="form-control" id="major" name="major" required maxlength="50"
+                 value="{{ v.get('major', cls.major if cls else '') }}">
+        </div>
+
+        <div class="col-md-4">
+          <label class="form-label" for="class_name">班级名称 <span class="text-danger">*</span></label>
+          <input class="form-control" id="class_name" name="class_name" required maxlength="50"
+                 value="{{ v.get('class_name', cls.class_name if cls else '') }}">
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button class="btn btn-primary" type="submit">保存</button>
+        <a class="btn btn-outline-secondary" href="{{ url_for('classes.list_classes') }}">取消</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
